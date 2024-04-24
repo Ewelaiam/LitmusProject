@@ -1,0 +1,43 @@
+version: "3.8"
+
+services:
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.37.0
+    restart: always
+    command: >
+      --config.file="/etc/prometheus/prometheus.yml"
+      --web.config.file="/etc/prometheus/prometheus-auth.yml"
+      --web.page-title="Prometheus"
+      --storage.tsdb.retention.time="15d"
+      --web.enable-remote-write-receiver
+    volumes:
+      - ./prometheus:/etc/prometheus:ro,Z
+      - prometheus-data:/prometheus
+    networks:
+      - infra
+    ports:
+      - "9090:9090"
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:8.5.9-ubuntu
+    restart: always
+    volumes:
+      - ./grafana:/etc/grafana:ro,Z
+    env_file: ./grafana/grafana.env
+    networks:
+      - infra
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+
+volumes:
+  prometheus-data:
+
+networks:
+  infra:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1450

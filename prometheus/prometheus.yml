@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 1m
+  scrape_timeout: 10s
+
+rule_files:
+  - prometheus-rules.yml
+
+scrape_configs:
+  - job_name: virtual-machines-metrics
+    scheme: http
+    metrics_path: /metrics
+    static_configs:
+      - targets: [
+#          address (IP:port)f of metrics to scrape
+        ]

@@ -1,0 +1,5 @@
+# Grafana
+grafana.env
+
+# Prometheus
+prometheus-auth.yml

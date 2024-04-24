@@ -1,0 +1,31 @@
+groups:
+  - name: VmState
+    rules:
+      - alert: VmFailure
+        expr: up{job="virtual-machines-metrics"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          resolve: true
+        annotations:
+          summary: VM may be not healthy
+          description: No metrics found for {{ $labels.instance }}.
+
+      - alert: VmOutOfMemory
+        expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
+        for: 2m
+        labels:
+          severity: warning
+          resolve: true
+        annotations:
+          summary: VM out of memory
+          description: VM memory is filling up for instance {{ $labels.instance }}.
+
+      - alert: VmHighCpuLoad
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m])) * 100) > 80
+        labels:
+          severity: warning
+          resolve: true
+        annotations:
+          summary: VM high CPU load
+          description: CPU load is high for instance {{ $labels.instance }}.
