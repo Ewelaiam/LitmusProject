@@ -15,8 +15,7 @@ spec:
       spec:
          containers:
             - name: litmus-tests-site
-              image: restapi:v0
-              imagePullPolicy: Never
+              image: adabd/litmusprojectlocalconfiguration:latest
               ports:
               - containerPort: 3000
 ---
